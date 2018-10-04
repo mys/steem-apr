@@ -4,31 +4,74 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Steem-apr</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<h1>Steem-apr</h1>
-		<p>Check out Steem best delegation APR%</p>
 
-		<span id="sbdPrice"></span>
-		<span> | </span>
-		<span id="steemPrice"></span>
+		<main role="main">
 
-		<table id="myTable">
-			<thead>
-			<tr>
-				<th scope="col">Delegatee</th>
-				<th scope="col">Delegated SP</th>
-				<th scope="col">Earned SBD</th>
-				<th scope="col">Earned STEEM</th>
-				<th scope="col">Delegation Start</th>
-				<th scope="col">Days delegated</th>
-				<th scope="col">APR</th>
-			</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+			<div class="text-center landing">
+				<div class="container">
+					<h1 class="jumbotron-heading">Steem-apr</h1>
+					<p>Check out Steem best delegation APR%</p>
+					<p class="prices">
+						<span id="sbdPrice"></span>
+						<span> | </span>
+						<span id="steemPrice"></span>
+					</p>
+				</div>
+			</div>
 
+			<div class="data">
+				<div class="container">
+
+					<h2>Delegations</h1>
+					<div class="input-group float-right" style="max-width: 400px;">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Account</span>
+							<span class="input-group-text">@</span>
+						</div>
+						<input id="searchText" value="wefund" type="text" class="form-control" placeholder="account">
+					</div>
+
+					<div class="mt-5">
+						<span id="date1"></span>
+						<span id="date2" class="float-right"></span>
+					</div>
+
+					<table id="myTable" class="table table-striped">
+						<thead class="thead-light">
+						<tr>
+							<th scope="col">Delegatee</th>
+							<th scope="col">Delegated SP</th>
+							<th scope="col">Earned SBD</th>
+							<th scope="col">Earned STEEM</th>
+							<th scope="col">Delegation Start</th>
+							<th scope="col">Days delegated</th>
+							<th scope="col">APR</th>
+						</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="footer text-muted bg-dark">
+				<div class="container">
+					<p class="float-right">
+						<a href="#">Back to top</a>
+					</p>
+					steemit.com / <a href="https://steemit.com/@mys">@mys</a>
+				</div>
+			</div>
+
+		</main>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 		<script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>

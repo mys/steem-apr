@@ -1,0 +1,40 @@
+.landing {
+	background-image: url("img/money.jpg");
+	padding: 2rem 2rem 6rem 2rem;
+    background-position-y: center;
+	background-size: cover;
+	background-color: rgba(0,0,0,0.3);
+    background-blend-mode: color;
+    color: white;
+}
+
+.jumbotron-heading {
+	font-size: 3rem;
+}
+
+.landing p {
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.landing .prices {
+	font-size: 1rem;
+	margin-top: 2rem;
+}
+
+.data {
+	padding: 2rem 0rem;
+}
+
+.table {
+	font-size: small;
+}
+
+.table td, .table th {
+	padding: 0.25rem;
+}
+
+.footer {
+	padding-top: 2rem;
+    padding-bottom: 2rem;
+}
