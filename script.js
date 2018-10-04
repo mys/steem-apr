@@ -157,8 +157,8 @@ async function render(accountHistory, delegationHistory){
 		let delegationROI = roi(delegation);
 		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
 		let row = table.insertRow(table.rows.length);
-		row.insertCell(row.cells.length).innerHTML = delegation.delegatee;
-		row.insertCell(row.cells.length).innerHTML = delegation.steemPower;
+		row.insertCell(row.cells.length).innerHTML = "<div class='userpic' style='background-image:url(&apos;https://steemitimages.com/u/" + delegation.delegatee + "/avatar&apos;);'></div>" + delegation.delegatee;
+        row.insertCell(row.cells.length).innerHTML = delegation.steemPower;
 		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSBD;
 		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSteem;
 		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY');
