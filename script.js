@@ -153,6 +153,20 @@ async function render(accountHistory, delegationHistory){
 		myTable.deleteRow(i);
 	}
 
+	let topAPRs = [0];
+	_.forOwn(delegationHistory, (delegation, key) => {
+		const delegationROI = roi(delegation);
+		if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[0])){
+			topAPRs.splice(0, 0, delegationROI.annualPercentageReturn);
+		}
+		else if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[1])){
+			topAPRs.splice(1, 0, delegationROI.annualPercentageReturn);
+		}
+		else if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[2])){
+			topAPRs.splice(2, 0, delegationROI.annualPercentageReturn);
+		}
+	})
+
 	_.forOwn(delegationHistory, (delegation, key) => {
 		let delegationROI = roi(delegation);
 		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
@@ -163,8 +177,13 @@ async function render(accountHistory, delegationHistory){
 		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSteem;
 		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY');
 		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegationROI.daysDelegated;
-		row.insertCell(row.cells.length).innerHTML = delegationROI.annualPercentageReturn + '%';
-		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? "<button type='button' class='btn btn-outline-secondary btn-sm load'>Load more</button>" : 'Full';
+		let innerHtml =
+			(delegationROI.annualPercentageReturn == topAPRs[0] ? '<i class="fa fa-trophy fa-2x" style="color:gold"></i> ' :
+			delegationROI.annualPercentageReturn == topAPRs[1] ? '<i class="fa fa-trophy fa-2x" style="color:grey"></i> ' :
+			delegationROI.annualPercentageReturn == topAPRs[2] ? '<i class="fa fa-trophy fa-2x" style="color:brown"></i> ' : '') +
+			delegationROI.annualPercentageReturn + '%';
+        row.insertCell(row.cells.length).innerHTML = innerHtml;
+        row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? "<button type='button' class='btn btn-outline-secondary btn-sm load'>Load more</button>" : 'Full';
 	})
 }
 
