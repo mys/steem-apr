@@ -34,6 +34,25 @@ async function priceHistoryRequest() {
 	}
 }
 
+async function accountHistoryLoadMore(){
+	let fetchLimit = INITIAL_FETCH_LIMIT;
+	let nextSequenceIdToLoad = _.last(accountHistory)[0] - 1
+
+	// If initial load has already loaded the complete history, set status and exit
+	if (nextSequenceIdToLoad <= 0) return
+
+	// From must be greater than limit when calling getAccountHistoryAsync(name, from, limit)
+	if (nextSequenceIdToLoad <= fetchLimit) {
+		fetchLimit = nextSequenceIdToLoad - 1
+	}
+
+	let accountHistoryMoreData = await steem.api.getAccountHistoryAsync(accounts[0].name, nextSequenceIdToLoad, fetchLimit);
+	accountHistory = accountHistory.concat(accountHistoryMoreData.reverse());
+
+	delegationHistory = await buildDelegationHistory(accountHistory, delegations);
+	await render(accountHistory, delegationHistory);
+}
+
 async function usernameSubmitted(){
 	let name = document.getElementById("searchText").value;
 	[accounts, accountHistory, delegations, dynamicGlobalProperties] = await Promise.all([
@@ -130,6 +149,10 @@ async function render(accountHistory, delegationHistory){
     }
 	document.getElementById('date2').textContent = accountHistoryDays + ' days';
 
+	for (let i = myTable.rows.length - 1; i > 0; i--) {
+		myTable.deleteRow(i);
+	}
+
 	_.forOwn(delegationHistory, (delegation, key) => {
 		let delegationROI = roi(delegation);
 		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
@@ -141,8 +164,27 @@ async function render(accountHistory, delegationHistory){
 		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY');
 		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegationROI.daysDelegated;
 		row.insertCell(row.cells.length).innerHTML = delegationROI.annualPercentageReturn + '%';
+		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? "<button type='button' class='btn btn-outline-secondary btn-sm load'>Load more</button>" : 'Full';
 	})
 }
+
+$(document).on('click', 'button.load', function () {
+    var $this = $(this);
+    var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading';
+    if ($(this).html() !== loadingText) {
+		$this.data('original-text', $(this).html());
+		$this.html(loadingText);
+		accountHistoryLoadMore();
+    }
+});
+
+$(function(){
+	$('.input-group').keypress(function(e){
+		if(e.which == 13) {
+			usernameSubmitted();
+		}
+	})
+})
 
 function roi(delegation){
 	let transfers = delegation.transfers
