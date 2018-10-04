@@ -22,10 +22,12 @@ async function priceHistoryRequest() {
 		if (priceHistorySBD.Data.length === 0) return
 		priceHistorySBD = priceHistorySBD.Data;
 		sbdPrice = _.last(priceHistorySBD).close;
+		document.getElementById('sbdPrice').textContent = 'SBD price: $' + sbdPrice;
 
 		if (priceHistorySTEEM.Data.length === 0) return
 		priceHistorySTEEM = priceHistorySTEEM.Data;
 		steemPrice = _.last(priceHistorySTEEM).close;
+		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice;
 
 	} catch (error) {
 		console.log(error.message)
