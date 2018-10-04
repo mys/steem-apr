@@ -4,7 +4,7 @@ Check out [Steem](https://steem.io) best delegation APR%
 
 <center><img src="https://www.steem.center/images/5/55/Steem_Logo.png"></center>
 
-Github pages link here
+https://mys.github.io/steem-apr
 
 ## Installing
 
