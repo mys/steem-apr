@@ -1,10 +1,10 @@
-const INITIAL_FETCH_LIMIT = 500;
-let [accounts, accountHistory, delegations, dynamicGlobalProperties] = [];
-let delegationHistory;
-let sbdPrice, steemPrice = 0;
+const INITIAL_FETCH_LIMIT = 500
+let [accounts, accountHistory, delegations, dynamicGlobalProperties] = []
+let delegationHistory
+let sbdPrice, steemPrice = 0
 
-steem.api.setOptions({ url: 'https://api.steemit.com' });
-priceHistoryRequest().then(usernameSubmitted);
+steem.api.setOptions({ url: 'https://api.steemit.com' })
+priceHistoryRequest().then(usernameSubmitted)
 
 
 async function priceHistoryRequest() {
@@ -20,14 +20,14 @@ async function priceHistoryRequest() {
 		])
 
 		if (priceHistorySBD.Data.length === 0) return
-		priceHistorySBD = priceHistorySBD.Data;
-		sbdPrice = _.last(priceHistorySBD).close;
-		document.getElementById('sbdPrice').textContent = 'SBD price: $' + sbdPrice;
+		priceHistorySBD = priceHistorySBD.Data
+		sbdPrice = _.last(priceHistorySBD).close
+		document.getElementById('sbdPrice').textContent = 'SBD price: $' + sbdPrice
 
 		if (priceHistorySTEEM.Data.length === 0) return
-		priceHistorySTEEM = priceHistorySTEEM.Data;
-		steemPrice = _.last(priceHistorySTEEM).close;
-		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice;
+		priceHistorySTEEM = priceHistorySTEEM.Data
+		steemPrice = _.last(priceHistorySTEEM).close
+		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice
 
 	} catch (error) {
 		console.log(error.message)
@@ -35,7 +35,7 @@ async function priceHistoryRequest() {
 }
 
 async function accountHistoryLoadMore(){
-	let fetchLimit = INITIAL_FETCH_LIMIT;
+	let fetchLimit = INITIAL_FETCH_LIMIT
 	let nextSequenceIdToLoad = _.last(accountHistory)[0] - 1
 
 	// If initial load has already loaded the complete history, set status and exit
@@ -46,11 +46,11 @@ async function accountHistoryLoadMore(){
 		fetchLimit = nextSequenceIdToLoad - 1
 	}
 
-	let accountHistoryMoreData = await steem.api.getAccountHistoryAsync(accounts[0].name, nextSequenceIdToLoad, fetchLimit);
-	accountHistory = accountHistory.concat(accountHistoryMoreData.reverse());
+	let accountHistoryMoreData = await steem.api.getAccountHistoryAsync(accounts[0].name, nextSequenceIdToLoad, fetchLimit)
+	accountHistory = accountHistory.concat(accountHistoryMoreData.reverse())
 
-	delegationHistory = await buildDelegationHistory(accountHistory, delegations);
-	await render(accountHistory, delegationHistory);
+	delegationHistory = await buildDelegationHistory(accountHistory, delegations)
+	await render(accountHistory, delegationHistory)
 }
 
 async function usernameSubmitted(){
@@ -60,7 +60,7 @@ async function usernameSubmitted(){
 		steem.api.getAccountHistoryAsync(name, -1, INITIAL_FETCH_LIMIT),
 		steem.api.getVestingDelegationsAsync(name, -1, 100),
 		steem.api.getDynamicGlobalPropertiesAsync()
-	]);
+	])
 
 	if (!accounts[0]) return
 	if (!accountHistory) return
@@ -79,23 +79,23 @@ async function usernameSubmitted(){
 		min_delegation_time: item.min_delegation_time
 	  }
 	})
-	delegations = delegationsObj;
+	delegations = delegationsObj
 
-	delegationHistory = await buildDelegationHistory(accountHistory, delegations);
-	await render(accountHistory, delegationHistory);
+	delegationHistory = await buildDelegationHistory(accountHistory, delegations)
+	await render(accountHistory, delegationHistory)
 }
 
 async function buildDelegationHistory(accountHistory, currentDelegations){
-	let delegationHistory = [];
+	let delegationHistory = []
 
 	if (_.isEmpty(accountHistory)) return delegationHistory
 
-	const delegationKeys = Object.keys(currentDelegations)
-	const accountHistoryEnd = moment(_.head(accountHistory)[1].timestamp, moment.ISO_8601)
-	const accountHistoryStart = moment(_.last(accountHistory)[1].timestamp, moment.ISO_8601)
+	let delegationKeys = Object.keys(currentDelegations)
+	let accountHistoryEnd = moment(_.head(accountHistory)[1].timestamp, moment.ISO_8601)
+	let accountHistoryStart = moment(_.last(accountHistory)[1].timestamp, moment.ISO_8601)
 
 	_.forOwn(currentDelegations, (delegation) => {
-		const { delegator, delegatee, vesting_shares, vesting_shares_sp } = delegation
+		let { delegator, delegatee, vesting_shares, vesting_shares_sp } = delegation
 		delegationHistory[`${delegator}_${delegatee}`] = {
 		  delegator,
 		  delegatee,
@@ -110,16 +110,16 @@ async function buildDelegationHistory(accountHistory, currentDelegations){
 	})
 
 	accountHistory.forEach((tx) => {
-		const txType = tx[1].op[0]
-		const txData = tx[1].op[1]
+		let txType = tx[1].op[0]
+		let txData = tx[1].op[1]
 		if (txType === 'transfer') {
-		  const delegationKey = `${txData.to}_${txData.from}`
+		  let delegationKey = `${txData.to}_${txData.from}`
 		  if (delegationKeys.includes(delegationKey)) {
 			delegationHistory[delegationKey].transfers.push(tx)
 		  }
 		} else {
 		  // tx is of type TRANSACTION_TYPES.DELEGATE_VESTING_SHARES
-		  const delegationKey = `${txData.delegator}_${txData.delegatee}`
+		  let delegationKey = `${txData.delegator}_${txData.delegatee}`
 		  // Only process current delegations, ignore the rest
 		  if (delegationKeys.includes(delegationKey)) {
 			// We found when the delegation started, so we overwrite the startDate initialized from accountHistory.
@@ -140,68 +140,66 @@ async function render(accountHistory, delegationHistory){
 	let accountHistoryDays = 0
 
 	if (_.isEmpty(accountHistory)) {
-        document.getElementById('date1').textContent = '';
+        document.getElementById('date1').textContent = ''
 	  } else {
-		const accountHistoryEnd = moment(_.head(accountHistory)[1].timestamp, moment.ISO_8601)
-		const accountHistoryStart = moment(_.last(accountHistory)[1].timestamp, moment.ISO_8601)
-        document.getElementById('date1').textContent = accountHistoryStart.format('MMMM Do YYYY') + ' - ' + accountHistoryEnd.format('MMMM Do YYYY');
+		let accountHistoryEnd = moment(_.head(accountHistory)[1].timestamp, moment.ISO_8601)
+		let accountHistoryStart = moment(_.last(accountHistory)[1].timestamp, moment.ISO_8601)
+        document.getElementById('date1').textContent = accountHistoryStart.format('MMMM Do YYYY') + ' - ' + accountHistoryEnd.format('MMMM Do YYYY')
         accountHistoryDays = accountHistoryEnd.diff(accountHistoryStart, 'days') + 1
     }
-	document.getElementById('date2').textContent = accountHistoryDays + ' days';
+	document.getElementById('date2').textContent = accountHistoryDays + ' days'
 
 	for (let i = myTable.rows.length - 1; i > 0; i--) {
-		myTable.deleteRow(i);
+		myTable.deleteRow(i)
 	}
 
-	let topAPRs = [0];
+	let topAPRs = [0]
 	_.forOwn(delegationHistory, (delegation, key) => {
-		const delegationROI = roi(delegation);
+		let delegationROI = roi(delegation)
 		if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[0])){
-			topAPRs.splice(0, 0, delegationROI.annualPercentageReturn);
+			topAPRs.splice(0, 0, delegationROI.annualPercentageReturn)
 		}
 		else if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[1])){
-			topAPRs.splice(1, 0, delegationROI.annualPercentageReturn);
+			topAPRs.splice(1, 0, delegationROI.annualPercentageReturn)
 		}
 		else if (parseFloat(delegationROI.annualPercentageReturn) > parseFloat(topAPRs[2])){
-			topAPRs.splice(2, 0, delegationROI.annualPercentageReturn);
+			topAPRs.splice(2, 0, delegationROI.annualPercentageReturn)
 		}
 	})
 
 	_.forOwn(delegationHistory, (delegation, key) => {
-		let delegationROI = roi(delegation);
-		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
-		let row = table.insertRow(table.rows.length);
-		row.insertCell(row.cells.length).innerHTML = "<div class='userpic' style='background-image:url(&apos;https://steemitimages.com/u/" + delegation.delegatee + "/avatar&apos;);'></div>" + delegation.delegatee;
-        row.insertCell(row.cells.length).innerHTML = delegation.steemPower;
-		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSBD;
-		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSteem;
-		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY');
-		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegationROI.daysDelegated;
+		let delegationROI = roi(delegation)
+		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0]
+		let row = table.insertRow(table.rows.length)
+		row.insertCell(row.cells.length).innerHTML = "<div class='userpic' style='background-image:url(&apos;https://steemitimages.com/u/" + delegation.delegatee + "/avatar&apos;);'></div>" + delegation.delegatee
+        row.insertCell(row.cells.length).innerHTML = delegation.steemPower
+		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSBD
+		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSteem
+		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY')
+		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegationROI.daysDelegated
 		let innerHtml =
 			(delegationROI.annualPercentageReturn == topAPRs[0] ? '<i class="fa fa-trophy fa-2x" style="color:gold"></i> ' :
 			delegationROI.annualPercentageReturn == topAPRs[1] ? '<i class="fa fa-trophy fa-2x" style="color:grey"></i> ' :
 			delegationROI.annualPercentageReturn == topAPRs[2] ? '<i class="fa fa-trophy fa-2x" style="color:brown"></i> ' : '') +
-			delegationROI.annualPercentageReturn + '%';
-        row.insertCell(row.cells.length).innerHTML = innerHtml;
-        row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? "<button type='button' class='btn btn-outline-secondary btn-sm load'>Load more</button>" : 'Full';
+			delegationROI.annualPercentageReturn + '%'
+        row.insertCell(row.cells.length).innerHTML = innerHtml
+        row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? "<button type='button' class='btn btn-outline-secondary btn-sm load'>Load more</button>" : 'Full'
 	})
 }
 
 $(document).on('click', 'button.load', function () {
-    var $this = $(this);
-    var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading';
+    var $this = $(this)
+    var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading'
     if ($(this).html() !== loadingText) {
-		$this.data('original-text', $(this).html());
-		$this.html(loadingText);
-		accountHistoryLoadMore();
+		$this.data('original-text', $(this).html())
+		$this.html(loadingText)
+		accountHistoryLoadMore()
     }
-});
+})
 
 $(function(){
 	$('.input-group').keypress(function(e){
-		if(e.which == 13) {
-			usernameSubmitted();
-		}
+		if(e.which == 13) usernameSubmitted()
 	})
 })
 
@@ -237,10 +235,10 @@ function unitString2Number(stringWithUnit){
 // vesting_shares is a string with the unit ' VESTS' appended
 // delegateVestingShares only accepts 6 decimal digits, therefore we use toFixed(6) for return
 function vests2Steem(vestingShares, dynamicGlobalProperties) {
-	const { total_vesting_fund_steem, total_vesting_shares } = dynamicGlobalProperties
-	const totalVestingFundSteemNumber = unitString2Number(total_vesting_fund_steem)
-	const totalVestingSharesNumber = unitString2Number(total_vesting_shares)
-	const vestingSharesNumber = unitString2Number(vestingShares)
+	let { total_vesting_fund_steem, total_vesting_shares } = dynamicGlobalProperties
+	let totalVestingFundSteemNumber = unitString2Number(total_vesting_fund_steem)
+	let totalVestingSharesNumber = unitString2Number(total_vesting_shares)
+	let vestingSharesNumber = unitString2Number(vestingShares)
   
 	return (totalVestingFundSteemNumber * (vestingSharesNumber / totalVestingSharesNumber)).toFixed(6)
 }
