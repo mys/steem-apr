@@ -4,7 +4,33 @@ let delegationHistory;
 let sbdPrice, steemPrice = 0;
 
 steem.api.setOptions({ url: 'https://api.steemit.com' });
-usernameSubmitted();
+priceHistoryRequest().then(usernameSubmitted);
+
+
+async function priceHistoryRequest() {
+	try {
+		// async request of prices here
+		let [priceHistorySBD, priceHistorySTEEM] = await Promise.all([
+			window.fetch(
+			'https://min-api.cryptocompare.com/data/histoday?fsym=SBD*&tsym=USD&limit=14'
+			).then(response => response.json()),
+			window.fetch(
+			'https://min-api.cryptocompare.com/data/histoday?fsym=STEEM&tsym=USD&limit=14'
+			).then(response => response.json())
+		])
+
+		if (priceHistorySBD.Data.length === 0) return
+		priceHistorySBD = priceHistorySBD.Data;
+		sbdPrice = _.last(priceHistorySBD).close;
+
+		if (priceHistorySTEEM.Data.length === 0) return
+		priceHistorySTEEM = priceHistorySTEEM.Data;
+		steemPrice = _.last(priceHistorySTEEM).close;
+
+	} catch (error) {
+		console.log(error.message)
+	}
+}
 
 async function usernameSubmitted(){
 	let name = 'wefund';
