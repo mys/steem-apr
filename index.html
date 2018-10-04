@@ -60,6 +60,14 @@
 				</div>
 			</div>
 
+			<div class="methodology bg-light">
+					<div class="container">
+						<h2>Methodology</h1>
+							<p class="text-center m-4 tex">$\color{green}APR\%$ = $\color{green}Earned\,SBD \; \color{blue}{SBD\,price \over STEEM\,price} \; \color{green} + \; Earned\,STEEM \over \color{green}Delegated\,SP$ x $365 \over \color{red}Days\;delegated$ x $100\%$</p>
+						<p>* SBD and STEEM prices taken from <a href="https://www.cryptocompare.com">cryptocompare.com</a></p>
+					</div>
+			</div>
+
 			<div class="footer text-muted bg-dark">
 				<div class="container">
 					<p class="float-right">
@@ -77,6 +85,13 @@
 		<script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+			  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+			  TeX: {extensions: ["color.js"]}
+			});
+		</script>
 		<script src="script.js"></script>
 	</body>
 </html>
