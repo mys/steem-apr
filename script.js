@@ -35,7 +35,7 @@ async function priceHistoryRequest() {
 }
 
 async function usernameSubmitted(){
-	let name = 'wefund';
+	let name = document.getElementById("searchText").value;
 	[accounts, accountHistory, delegations, dynamicGlobalProperties] = await Promise.all([
 		steem.api.getAccountsAsync([name]),
 		steem.api.getAccountHistoryAsync(name, -1, INITIAL_FETCH_LIMIT),
@@ -63,7 +63,7 @@ async function usernameSubmitted(){
 	delegations = delegationsObj;
 
 	delegationHistory = await buildDelegationHistory(accountHistory, delegations);
-	await render(delegationHistory);
+	await render(accountHistory, delegationHistory);
 }
 
 async function buildDelegationHistory(accountHistory, currentDelegations){
@@ -117,7 +117,19 @@ async function buildDelegationHistory(accountHistory, currentDelegations){
 	return delegationHistory
 }
 
-async function render(delegationHistory){
+async function render(accountHistory, delegationHistory){
+	let accountHistoryDays = 0
+
+	if (_.isEmpty(accountHistory)) {
+        document.getElementById('date1').textContent = '';
+	  } else {
+		const accountHistoryEnd = moment(_.head(accountHistory)[1].timestamp, moment.ISO_8601)
+		const accountHistoryStart = moment(_.last(accountHistory)[1].timestamp, moment.ISO_8601)
+        document.getElementById('date1').textContent = accountHistoryStart.format('MMMM Do YYYY') + ' - ' + accountHistoryEnd.format('MMMM Do YYYY');
+        accountHistoryDays = accountHistoryEnd.diff(accountHistoryStart, 'days') + 1
+    }
+	document.getElementById('date2').textContent = accountHistoryDays + ' days';
+
 	_.forOwn(delegationHistory, (delegation, key) => {
 		let delegationROI = roi(delegation);
 		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
