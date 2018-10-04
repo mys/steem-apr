@@ -1,12 +1,13 @@
 const INITIAL_FETCH_LIMIT = 500;
 let [accounts, accountHistory, delegations, dynamicGlobalProperties] = [];
 let delegationHistory;
+let sbdPrice, steemPrice = 0;
 
 steem.api.setOptions({ url: 'https://api.steemit.com' });
 usernameSubmitted();
 
 async function usernameSubmitted(){
-    let name = 'wefund';
+	let name = 'wefund';
 	[accounts, accountHistory, delegations, dynamicGlobalProperties] = await Promise.all([
 		steem.api.getAccountsAsync([name]),
 		steem.api.getAccountHistoryAsync(name, -1, INITIAL_FETCH_LIMIT),
@@ -17,29 +18,24 @@ async function usernameSubmitted(){
 	if (!accounts[0]) return
 	if (!accountHistory) return
 	if (!delegations) return
-    if (!dynamicGlobalProperties) return
+	if (!dynamicGlobalProperties) return
 
 	accountHistory = accountHistory.reverse()
 
 	let delegationsObj = {}
-    delegations.forEach((item) => {
-      delegationsObj[`${item.delegator}_${item.delegatee}`] = {
-        delegator: item.delegator,
-        delegatee: item.delegatee,
-        vesting_shares: item.vesting_shares,
-        vesting_shares_sp: `${Number.parseFloat(vests2Steem(item.vesting_shares, dynamicGlobalProperties)).toFixed(0)} SP`,
-        min_delegation_time: item.min_delegation_time
-      }
-    })
-    delegations = delegationsObj;
+	delegations.forEach((item) => {
+	  delegationsObj[`${item.delegator}_${item.delegatee}`] = {
+		delegator: item.delegator,
+		delegatee: item.delegatee,
+		vesting_shares: item.vesting_shares,
+		vesting_shares_sp: `${Number.parseFloat(vests2Steem(item.vesting_shares, dynamicGlobalProperties)).toFixed(0)} SP`,
+		min_delegation_time: item.min_delegation_time
+	  }
+	})
+	delegations = delegationsObj;
 
-	console.log(accounts);
-	console.log(accountHistory);
-	console.log(delegations);
-    console.log(dynamicGlobalProperties);
-
-    delegationHistory = await buildDelegationHistory(accountHistory, delegations);
-    console.log(delegationHistory);
+	delegationHistory = await buildDelegationHistory(accountHistory, delegations);
+	await render(delegationHistory);
 }
 
 async function buildDelegationHistory(accountHistory, currentDelegations){
@@ -88,9 +84,49 @@ async function buildDelegationHistory(accountHistory, currentDelegations){
 			_.pull(delegationKeys, delegationKey)
 		  }
 		}
-    })
+	})
 
 	return delegationHistory
+}
+
+async function render(delegationHistory){
+	_.forOwn(delegationHistory, (delegation, key) => {
+		let delegationROI = roi(delegation);
+		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+		let row = table.insertRow(table.rows.length);
+		row.insertCell(row.cells.length).innerHTML = delegation.delegatee;
+		row.insertCell(row.cells.length).innerHTML = delegation.steemPower;
+		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSBD;
+		row.insertCell(row.cells.length).innerHTML = delegationROI.earnedSteem;
+		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegation.startDate.format('MMM Do YYYY');
+		row.insertCell(row.cells.length).innerHTML = delegation.hasMoreData ? '—' : delegationROI.daysDelegated;
+		row.insertCell(row.cells.length).innerHTML = delegationROI.annualPercentageReturn + '%';
+	})
+}
+
+function roi(delegation){
+	let transfers = delegation.transfers
+	let daysDelegated = delegation.endDate.diff(delegation.startDate, 'days') + 1
+	let earnedSteem = 0
+	let earnedSBD = 0
+	let apr = 0
+	transfers.forEach((transfer) => {
+		let splits = transfer[1].op[1].amount.split(' ', 2)
+		if (splits[1] === 'SBD') {
+			earnedSBD += Number(splits[0])
+		}
+		if (splits[1] === 'STEEM') {
+			earnedSteem += Number(splits[0])
+		}
+	})
+	let delegatedSP = unitString2Number(delegation.steemPower)
+	apr = (((earnedSBD * sbdPrice / steemPrice) + earnedSteem) / daysDelegated) / delegatedSP * 100 * 365
+	return {
+		earnedSteem: earnedSteem.toFixed(2),
+		earnedSBD: earnedSBD.toFixed(2),
+		daysDelegated,
+		annualPercentageReturn: apr.toFixed(2)
+	}
 }
 
 function unitString2Number(stringWithUnit){
