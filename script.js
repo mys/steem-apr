@@ -27,7 +27,7 @@ async function priceHistoryRequest() {
 		if (priceHistorySTEEM.Data.length === 0) return
 		priceHistorySTEEM = priceHistorySTEEM.Data
 		steemPrice = _.last(priceHistorySTEEM).close
-		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice
+		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice + ' *'
 
 	} catch (error) {
 		console.log(error.message)
