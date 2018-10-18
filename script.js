@@ -168,8 +168,17 @@ async function render(accountHistory, delegationHistory){
 		}
 	})
 
-	_.forOwn(delegationHistory, (delegation, key) => {
-		let delegationROI = roi(delegation)
+	_.forOwn(delegationHistory, (delegation) => {
+                delegation.roi = roi(delegation)
+	})
+
+        let delegationHistoryArray = [];
+        delegationHistoryArray = Object.values(delegationHistory);
+        delegationHistoryArray.sort(compare).reverse();
+        let delegationHistorySorted = Object.assign({}, delegationHistoryArray);
+
+	_.forOwn(delegationHistorySorted, (delegation, key) => {
+                let delegationROI = delegation.roi
 		let table = document.getElementById('myTable').getElementsByTagName('tbody')[0]
 		let row = table.insertRow(table.rows.length)
 		row.insertCell(row.cells.length).innerHTML = "<div class='userpic' style='background-image:url(&apos;https://steemitimages.com/u/" + delegation.delegatee + "/avatar&apos;);'></div>" + delegation.delegatee
@@ -243,3 +252,14 @@ function vests2Steem(vestingShares, dynamicGlobalProperties) {
   
 	return (totalVestingFundSteemNumber * (vestingSharesNumber / totalVestingSharesNumber)).toFixed(6)
 }
+
+function compare(a,b) {
+  a = parseFloat(a.roi.annualPercentageReturn)
+  b = parseFloat(b.roi.annualPercentageReturn)
+  if (a < b)
+    return -1;
+  if (a > b)
+    return 1;
+  return 0;
+}
+
