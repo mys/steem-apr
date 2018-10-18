@@ -55,6 +55,7 @@ async function accountHistoryLoadMore(){
 
 async function usernameSubmitted(){
 	let name = document.getElementById("searchText").value;
+        name = name.toLowerCase();
 	[accounts, accountHistory, delegations, dynamicGlobalProperties] = await Promise.all([
 		steem.api.getAccountsAsync([name]),
 		steem.api.getAccountHistoryAsync(name, -1, INITIAL_FETCH_LIMIT),
