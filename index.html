@@ -3,7 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Steem-apr</title>
+		<title>Steem Profit</title>
+                <meta name="description" content="Compare ROI from different STEEM services.">
+                <meta name="keywords" content="steem,profit,roi,apr">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="style.css">
@@ -15,8 +17,8 @@
 
 			<div class="text-center landing">
 				<div class="container">
-					<h1 class="jumbotron-heading">Steem-apr</h1>
-					<p>Check out Steem best delegation APR%</p>
+					<h1 class="jumbotron-heading">STEEM Profit</h1>
+					<p>Check out STEEM most profitable services.</p>
 					<p class="prices">
 						<span id="sbdPrice"></span>
 						<span> | </span>
@@ -63,9 +65,13 @@
 
 			<div class="methodology bg-light">
 					<div class="container">
-						<h2>Methodology</h1>
-							<p class="text-center m-4 tex">$\color{green}APR\%$ = $\color{green}Earned\,SBD \; \color{blue}{SBD\,price \over STEEM\,price} \; \color{green} + \; Earned\,STEEM \over \color{green}Delegated\,SP$ x $365 \over \color{red}Days\;delegated$ x $100\%$</p>
-						<p>* SBD and STEEM prices taken from <a href="https://www.cryptocompare.com">cryptocompare.com</a></p>
+						<h3>Info:</h3>
+							<p class="text-left m-3">1. The website tracks transfers to steem user <a href="https://steemd.com/@wefund" target=”_blank">@wefund</a> (by default), who delegated SP to various steem services. Thanks to this we are able to determinate the size of payouts from each service.</p>
+							<p class="text-left m-3">2. The higher the APR (annual percentage rate), the more profitable the service is. APR is calculated using the formula:<br>(steem profit + sbd profit) / delegation / days delegated * 365 * 100%</p>
+							<p class="text-left m-3">3. Please note that some services send payouts every few days, while others few times a day. This may cause the website to display slightly higher or slightly lower APR than the actual one - depending on the moment of checking. To get the overall picture, it's best to check the website on a regular basis.</p>
+							<p class="text-left m-3">4. You can extend the calculations time-frame by clicking "Load More" next to the APR. This should give more reliable results.</p>
+							<p class="text-left m-3">5. Please note that the website does now know which transfer is a payout and which is, for example, a refunded upvote request. Please use users @wefund and @lavater to compare the APR as they should be receiving only payouts from the listed services.</p>
+							<p class="text-left m-3">6. * SBD and STEEM prices taken from <a href="https://www.cryptocompare.com" target=”_blank">cryptocompare.com</a>.</p>
 					</div>
 			</div>
 
