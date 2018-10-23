@@ -1,4 +1,4 @@
-const INITIAL_FETCH_LIMIT = 500
+const INITIAL_FETCH_LIMIT = 1000
 let [accounts, accountHistory, delegations, dynamicGlobalProperties] = []
 let delegationHistory
 let sbdPrice, steemPrice = 0
