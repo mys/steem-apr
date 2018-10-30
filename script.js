@@ -219,14 +219,19 @@ function roi(delegation){
 	let earnedSteem = 0
 	let earnedSBD = 0
 	let apr = 0
+        let transfer_counter = 0
 	transfers.forEach((transfer) => {
-		let splits = transfer[1].op[1].amount.split(' ', 2)
-		if (splits[1] === 'SBD') {
-			earnedSBD += Number(splits[0])
+		//ignore first transfer
+		if (transfer_counter > 0) {
+			let splits = transfer[1].op[1].amount.split(' ', 2)
+				if (splits[1] === 'SBD') {
+					earnedSBD += Number(splits[0])
+				}
+				if (splits[1] === 'STEEM') {
+					earnedSteem += Number(splits[0])
+				}
 		}
-		if (splits[1] === 'STEEM') {
-			earnedSteem += Number(splits[0])
-		}
+		transfer_counter += 1
 	})
 	let delegatedSP = unitString2Number(delegation.steemPower)
 	apr = (((earnedSBD * sbdPrice / steemPrice) + earnedSteem) / daysDelegated) / delegatedSP * 100 * 365
