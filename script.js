@@ -236,8 +236,8 @@ function roi(delegation){
 	let delegatedSP = unitString2Number(delegation.steemPower)
 	apr = (((earnedSBD * sbdPrice / steemPrice) + earnedSteem) / daysDelegated) / delegatedSP * 100 * 365
 	return {
-		earnedSteem: earnedSteem.toFixed(2),
-		earnedSBD: earnedSBD.toFixed(2),
+		earnedSteem: earnedSteem.toFixed(3),
+		earnedSBD: earnedSBD.toFixed(3),
 		daysDelegated,
 		annualPercentageReturn: apr.toFixed(2)
 	}
