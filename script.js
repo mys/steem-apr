@@ -1,4 +1,4 @@
-const INITIAL_FETCH_LIMIT = 1000
+const INITIAL_FETCH_LIMIT = 2000
 let [accounts, accountHistory, delegations, dynamicGlobalProperties] = []
 let delegationHistory
 let sbdPrice, steemPrice = 0
@@ -219,7 +219,7 @@ function roi(delegation){
 	let earnedSteem = 0
 	let earnedSBD = 0
 	let apr = 0
-        let transfer_counter = 0
+	let transfer_counter = 0
 	transfers.forEach((transfer) => {
 		//ignore first transfer
 		if (transfer_counter > 0) {
