@@ -22,7 +22,7 @@ async function priceHistoryRequest() {
 		if (priceHistorySBD.Data.length === 0) return
 		priceHistorySBD = priceHistorySBD.Data
 		sbdPrice = _.last(priceHistorySBD).close
-		sbdPrice = '0.97'
+		//sbdPrice = '0.97'
 		document.getElementById('sbdPrice').textContent = 'SBD price: $' + sbdPrice
 
 		if (priceHistorySTEEM.Data.length === 0) return
