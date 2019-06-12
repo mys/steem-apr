@@ -73,7 +73,6 @@ async function usernameSubmitted(){
 
 	let delegationsObj = {}
 	delegations.forEach((item) => {
-	  if (item.delegatee != 'spydo'){
 		delegationsObj[`${item.delegator}_${item.delegatee}`] = {
 			delegator: item.delegator,
 			delegatee: item.delegatee,
@@ -81,7 +80,6 @@ async function usernameSubmitted(){
 			vesting_shares_sp: `${Number.parseFloat(vests2Steem(item.vesting_shares, dynamicGlobalProperties)).toFixed(0)} SP`,
 			min_delegation_time: item.min_delegation_time
 		}
-	  }
 	})
 	delegations = delegationsObj
 
