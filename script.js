@@ -10,24 +10,14 @@ priceHistoryRequest().then(usernameSubmitted)
 async function priceHistoryRequest() {
 	try {
 		// async request of prices here
-		let [priceHistorySBD, priceHistorySTEEM] = await Promise.all([
-			window.fetch(
-			'https://min-api.cryptocompare.com/data/histoday?fsym=SBD*&tsym=USD&limit=14'
-			).then(response => response.json()),
-			window.fetch(
-			'https://min-api.cryptocompare.com/data/histoday?fsym=STEEM&tsym=USD&limit=14'
-			).then(response => response.json())
-		])
+		let cors = 'https://cors-anywhere.herokuapp.com/'
+		let setup = await window.fetch(cors+'https://tipu.online/api/setup')
+			.then(response => response.json())
+		if (setup.length == 0) return
 
-		if (priceHistorySBD.Data.length === 0) return
-		priceHistorySBD = priceHistorySBD.Data
-		sbdPrice = _.last(priceHistorySBD).close
-		//sbdPrice = '0.97'
+		sbdPrice = setup[0].sbd_price
+		steemPrice = setup[0].steem_price
 		document.getElementById('sbdPrice').textContent = 'SBD price: $' + sbdPrice
-
-		if (priceHistorySTEEM.Data.length === 0) return
-		priceHistorySTEEM = priceHistorySTEEM.Data
-		steemPrice = _.last(priceHistorySTEEM).close
 		document.getElementById('steemPrice').textContent = 'STEEM price: $' + steemPrice + ' *'
 
 	} catch (error) {
