@@ -213,7 +213,7 @@ function roi(delegation){
 	let transfer_counter = 0
 	transfers.forEach((transfer) => {
 		//ignore first transfer
-		if (transfer_counter > 0) {
+		if (transfer_counter >= 0) {
 			let splits = transfer[1].op[1].amount.split(' ', 2)
 				if (splits[1] === 'SBD') {
 					earnedSBD += Number(splits[0])
