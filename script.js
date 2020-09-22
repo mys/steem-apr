@@ -206,7 +206,7 @@ $(function(){
 
 function roi(delegation){
 	let transfers = delegation.transfers
-	let daysDelegated = delegation.endDate.diff(delegation.startDate, 'days') + 1
+	let daysDelegated = delegation.endDate.diff(delegation.startDate, 'days')
 	let earnedSteem = 0
 	let earnedSBD = 0
 	let apr = 0
